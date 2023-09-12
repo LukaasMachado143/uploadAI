@@ -1,7 +1,8 @@
-import { Button } from "./components/ui/button";
-
+import { Header } from "./components/Header/Header"
 export function App() {
   return (
-    <Button>Teste</Button>
+    <div>
+      <Header />
+    </div>
   )
 }
