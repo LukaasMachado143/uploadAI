@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 interface AiBody {
     videoId: string | null
     temperature: number
-    template: string | null
+    prompt: string | null
 }
 
 interface AiPropertiesFormProps {
@@ -18,24 +18,24 @@ interface AiPropertiesFormProps {
 export function AiPropertiesForm({ handleData }: AiPropertiesFormProps) {
 
     const [temperature, setTemperature] = useState(0.5)
-    const [template, setTemplate] = useState<string | null>(null)
+    const [prompt, setPrompt] = useState<string | null>(null)
 
     useEffect(() => {
         const aiBody: AiBody = {
             videoId: null,
             temperature: temperature,
-            template: template,
+            prompt: prompt,
         }
 
         handleData(aiBody)
-    }, [temperature, template])
+    }, [temperature, prompt])
 
     return (
         <form className="space-y-6">
 
             <div className="space-y-2">
                 <label>Prompt</label>
-                <PromptSelect onSelectedValue={setTemplate} />
+                <PromptSelect onSelectedValue={setPrompt} />
             </div>
 
             <div className="space-y-2">

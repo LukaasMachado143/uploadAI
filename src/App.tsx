@@ -4,11 +4,12 @@ import { VideoInputForm } from "./components/video-input-form"
 import { AiPropertiesForm } from "./components/ai-properties-form"
 import { useEffect, useState } from "react"
 import { MainReqResArea } from "./components/main-req-res-area"
+import { useCompletion } from "ai/react"
 
 interface AiBody {
   videoId: string | null
   temperature: number
-  template: string | null
+  prompt: string | null
 }
 
 export function App() {
@@ -16,12 +17,14 @@ export function App() {
   const initialStateAiBody = {
     temperature: 0,
     videoId: null,
-    template: null
+    prompt: null
   }
   const [aiBody, setAiBody] = useState<AiBody>(initialStateAiBody)
-  // useEffect(() => {
-  //   console.log(aiBody)
-  // }, [aiBody])
+  useEffect(() => {
+    console.log(aiBody)
+  }, [aiBody])
+
+
   return (
     <div className="min-h-screen flex flex-col">
 
@@ -41,10 +44,10 @@ export function App() {
 
           <Separator />
 
-          <AiPropertiesForm handleData={({ template, temperature }) => {
+          <AiPropertiesForm handleData={({ prompt, temperature }) => {
             setAiBody((prevState) => ({
               ...prevState,
-              template,
+              prompt,
               temperature,
             }));
           }} />

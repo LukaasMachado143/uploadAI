@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 
+interface MainReqResAreaProps{
+    
+}
+
 export function MainReqResArea() {
     const [prompt, setPrompt] = useState<string>("")
     const [resultAi, setResultAi] = useState<string>("")
