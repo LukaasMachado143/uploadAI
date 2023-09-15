@@ -1,4 +1,4 @@
-import { Header } from "./components/Header/Header"
+import { Header } from "./components/header"
 import { Textarea } from "./components/ui/textarea"
 import { Separator } from "./components/ui/separator"
 import { VideoInputForm } from "./components/video-input-form"
