@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "./ui/textarea";
 
-interface MainReqResAreaProps{
-    
-}
-
-export function MainReqResArea() {
+export function MainReqResArea(promptValue: any, resultAiValue: string) {
     const [prompt, setPrompt] = useState<string>("")
     const [resultAi, setResultAi] = useState<string>("")
+
+    useEffect(() => {
+        setPrompt(promptValue.promptValue)
+    }, [promptValue])
+
+    useEffect(() => {
+        setResultAi(resultAiValue)
+    }, [resultAiValue])
+
     return (
         <div className="flex flex-col flex-1 gap-4">
             <div className="grid grid-rows-2 gap-4 flex-1">

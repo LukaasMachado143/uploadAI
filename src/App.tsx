@@ -9,7 +9,7 @@ import { useCompletion } from "ai/react"
 interface AiBody {
   videoId: string | null
   temperature: number
-  prompt: string | null
+  prompt: string
 }
 
 export function App() {
@@ -17,13 +17,19 @@ export function App() {
   const initialStateAiBody = {
     temperature: 0,
     videoId: null,
-    prompt: null
+    prompt: ""
   }
   const [aiBody, setAiBody] = useState<AiBody>(initialStateAiBody)
+  const [prompt, setPrompt] = useState<String>("")
+
   useEffect(() => {
-    console.log(aiBody)
+    setPrompt(aiBody.prompt)
   }, [aiBody])
 
+  const { handleSubmit } = useCompletion({
+    api: "http://localhost:3333/ai/complete",
+    body: aiBody,
+  })
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -32,7 +38,7 @@ export function App() {
 
       <main className="flex-1 p-6 flex gap-6">
 
-        <MainReqResArea />
+        <MainReqResArea promptValue={prompt} />
 
         <aside className="w-80 space-y-6">
           <VideoInputForm handleVideoId={(videoId) => {
@@ -44,13 +50,15 @@ export function App() {
 
           <Separator />
 
-          <AiPropertiesForm handleData={({ prompt, temperature }) => {
-            setAiBody((prevState) => ({
-              ...prevState,
-              prompt,
-              temperature,
-            }));
-          }} />
+          <AiPropertiesForm
+            handleData={({ prompt, temperature }) => {
+              setAiBody((prevState) => ({
+                ...prevState,
+                prompt,
+                temperature,
+              }));
+            }}
+          />
         </aside>
       </main>
 

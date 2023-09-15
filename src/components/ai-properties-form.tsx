@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 interface AiBody {
     videoId: string | null
     temperature: number
-    prompt: string | null
+    prompt: string
 }
 
 interface AiPropertiesFormProps {
@@ -18,7 +18,7 @@ interface AiPropertiesFormProps {
 export function AiPropertiesForm({ handleData }: AiPropertiesFormProps) {
 
     const [temperature, setTemperature] = useState(0.5)
-    const [prompt, setPrompt] = useState<string | null>(null)
+    const [prompt, setPrompt] = useState<string>("")
 
     useEffect(() => {
         const aiBody: AiBody = {
