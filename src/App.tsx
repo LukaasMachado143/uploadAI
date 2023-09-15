@@ -1,12 +1,24 @@
-import { Wand2 } from "lucide-react"
 import { Header } from "./components/Header/Header"
 import { Textarea } from "./components/ui/textarea"
 import { Separator } from "./components/ui/separator"
-import { Button } from "./components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select"
-import { Slider } from "./components/ui/slider"
 import { VideoInputForm } from "./components/video-input-form"
+import { AiPropertiesForm } from "./components/ai-properties-form"
+import { useState } from "react"
+
+interface AiBody {
+  videoId: string | null
+  temperature: number
+  template: string | null
+}
+
 export function App() {
+  const initialStateAiBody = {
+    temperature: 0,
+    videoId: null,
+    template: null
+  }
+  const [aiBody, setAiBody] = useState<AiBody>(initialStateAiBody)
+
   return (
     <div className="min-h-screen flex flex-col">
 
@@ -25,57 +37,16 @@ export function App() {
         </div>
 
         <aside className="w-80 space-y-6">
-          <VideoInputForm />
+          <VideoInputForm handleVideoId={(videoId) => {
+            setAiBody((prevState) => ({
+              ...prevState,
+              videoId,
+            }));
+          }} />
 
           <Separator />
 
-          <form className="space-y-6">
-
-            <div className="space-y-2">
-              <label>Prompt</label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione um prompt ..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="title">Título do Youtube</SelectItem>
-                  <SelectItem value="description">Descrição do Youtube</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label>Modelo</label>
-              <Select disabled defaultValue='gpt3.5' >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="gpt3.5">GPT 3.5-Turbo 16k</SelectItem>
-                </SelectContent>
-              </Select>
-              <span className="block text-muted-foreground text-xs italic">
-                Você poderá customizar essa opção em breve
-              </span>
-            </div>
-
-            <Separator />
-
-            <div className="space-y-4">
-              <label>Temperatura</label>
-              <Slider min={0} max={1} step={0.1} />
-              <span className="block text-muted-foreground text-xs italic leading-relaxed">
-                Valores mais altos tendem a deixar o resultado mais criativo e com possíveis erros.
-              </span>
-            </div>
-
-            <Separator />
-
-            <Button className="text-white w-full" type="submit">
-              Executar
-              <Wand2 className="w-4 h-4 ml-2" />
-            </Button>
-          </form>
+          <AiPropertiesForm handleData={setAiBody} />
         </aside>
       </main>
 

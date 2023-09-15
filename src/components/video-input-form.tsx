@@ -9,14 +9,20 @@ import { fetchFile } from "@ffmpeg/util"
 import { api } from "@/lib/axios";
 
 type Status = 'waiting' | 'converting' | 'uploading' | 'generating' | 'sucess'
-const staatusMessage = {
+
+const statusMessage = {
     converting: "Convertendo...",
     uploading: "Carregando...",
     generating: "Transcrevendo...",
     sucess: "Sucesso !",
 }
 
-export function VideoInputForm() {
+interface VideoInputFormProps {
+    handleVideoId: (id: string) => void
+}
+
+
+export function VideoInputForm({ handleVideoId }: VideoInputFormProps) {
     const [videoFile, setVideoFile] = useState<File | null>(null)
     const promptInputRef = useRef<HTMLTextAreaElement>(null)
     const [status, setStatus] = useState<Status>('waiting')
@@ -34,12 +40,8 @@ export function VideoInputForm() {
     }
 
     async function convertVideoToAudio(video: File) {
-        console.log("Convert started.")
         const ffmpeg = await getFFmpeg();
         await ffmpeg.writeFile('input.mp4', await fetchFile(video))
-        ffmpeg.on("progress", progress => {
-            console.log('Converting progress: ' + progress.progress * 100)
-        })
 
         await ffmpeg.exec([
             '-i',
@@ -57,7 +59,7 @@ export function VideoInputForm() {
 
         const audioFileBlob = new Blob([data], { type: 'audio/mpeg' })
         const audioFile = new File([audioFileBlob], 'audio.mp3', { type: 'audio/mpeg' })
-        console.log("Convert finish.")
+
         return audioFile
     }
 
@@ -72,7 +74,7 @@ export function VideoInputForm() {
         setStatus("converting")
         // converter vídeo em aúdio
         const audioFile = await convertVideoToAudio(videoFile)
-        console.log(audioFile, prompt)
+
 
         const data = new FormData()
         data.append('file', audioFile)
@@ -80,14 +82,13 @@ export function VideoInputForm() {
         setStatus("uploading")
         const response = await api.post("/videos", data)
 
-        console.log(response.data)
-
         const videoId = response.data.id
 
         setStatus("generating")
         await api.post(`/videos/${videoId}/transcription`, { prompt })
 
         setStatus("sucess")
+        handleVideoId(videoId)
     }
 
     const previewUrl = useMemo(() => {
@@ -149,7 +150,7 @@ export function VideoInputForm() {
                         </>
                     )
                     :
-                    staatusMessage[status]
+                    statusMessage[status]
                 }
             </Button>
         </form>
