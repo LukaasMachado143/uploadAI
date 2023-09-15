@@ -2,7 +2,7 @@ import { Header } from "./components/header"
 import { Separator } from "./components/ui/separator"
 import { VideoInputForm } from "./components/video-input-form"
 import { AiPropertiesForm } from "./components/ai-properties-form"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MainReqResArea } from "./components/main-req-res-area"
 
 interface AiBody {
@@ -19,7 +19,9 @@ export function App() {
     template: null
   }
   const [aiBody, setAiBody] = useState<AiBody>(initialStateAiBody)
-
+  // useEffect(() => {
+  //   console.log(aiBody)
+  // }, [aiBody])
   return (
     <div className="min-h-screen flex flex-col">
 
@@ -39,7 +41,13 @@ export function App() {
 
           <Separator />
 
-          <AiPropertiesForm handleData={setAiBody} />
+          <AiPropertiesForm handleData={({ template, temperature }) => {
+            setAiBody((prevState) => ({
+              ...prevState,
+              template,
+              temperature,
+            }));
+          }} />
         </aside>
       </main>
 
