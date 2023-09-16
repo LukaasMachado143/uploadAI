@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { Textarea } from "./ui/textarea";
 
-export function MainReqResArea(promptValue: any, resultAiValue: string) {
+export function MainReqResArea(promptValue: any,) {
     const [prompt, setPrompt] = useState<string>("")
-    const [resultAi, setResultAi] = useState<string>("")
 
     useEffect(() => {
         setPrompt(promptValue.promptValue)
     }, [promptValue])
 
-    useEffect(() => {
-        setResultAi(resultAiValue)
-    }, [resultAiValue])
 
     return (
         <div className="flex flex-col flex-1 gap-4">
@@ -25,7 +21,6 @@ export function MainReqResArea(promptValue: any, resultAiValue: string) {
                     placeholder="Inclua o prompt para a IA ..."
                 />
                 <Textarea
-                    value={resultAi}
                     className="resize-none p-4 leading-relaxed"
                     placeholder="Resultado gerado pela IA ..."
                     readOnly

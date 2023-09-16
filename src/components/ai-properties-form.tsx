@@ -5,6 +5,7 @@ import { Slider } from "./ui/slider";
 import { Separator } from "./ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { useEffect, useState } from "react";
+import { useCompletion } from "ai/react";
 
 interface AiBody {
     videoId: string | null
@@ -13,25 +14,44 @@ interface AiBody {
 }
 
 interface AiPropertiesFormProps {
-    handleData: (body: AiBody) => void
+    videoId: string
 }
-export function AiPropertiesForm({ handleData }: AiPropertiesFormProps) {
 
+export function AiPropertiesForm({ videoId }: AiPropertiesFormProps) {
+    const aiBodyInitialState: AiBody = {
+        videoId: "",
+        temperature: 0.5,
+        prompt: "",
+    }
+    const [aiBody, setAiBody] = useState<AiBody>(aiBodyInitialState)
     const [temperature, setTemperature] = useState(0.5)
     const [prompt, setPrompt] = useState<string>("")
 
     useEffect(() => {
-        const aiBody: AiBody = {
-            videoId: null,
+        setAiBody({
+            videoId: videoId,
             temperature: temperature,
             prompt: prompt,
-        }
+        })
+    }, [temperature, prompt, videoId])
 
-        handleData(aiBody)
-    }, [temperature, prompt])
+    const {
+        input,
+        setInput,
+        handleInputChange,
+        handleSubmit,
+        completion,
+        isLoading,
+    } = useCompletion({
+        api: 'http://localhost:3333/ai/complete',
+        body: aiBody,
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
 
     return (
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
 
             <div className="space-y-2">
                 <label>Prompt</label>
@@ -74,7 +94,11 @@ export function AiPropertiesForm({ handleData }: AiPropertiesFormProps) {
 
             <Separator />
 
-            <Button className="text-white w-full" type="submit">
+            <Button
+                disabled={aiBody.prompt === "" || aiBody.videoId === "" || isLoading}
+                className="text-white w-full"
+                type="submit"
+            >
                 Executar
                 <Wand2 className="w-4 h-4 ml-2" />
             </Button>
